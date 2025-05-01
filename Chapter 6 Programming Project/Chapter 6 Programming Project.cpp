@@ -25,14 +25,24 @@ int main() {
 // Function to get and validate accident numbers
 int getAccidents(const string& region) {
 	int accidents;
-	do {
+	while (true) {
 		cout << region << " region: ";
 		cin >> accidents;
-		if (accidents < 0) {
-			cout << "Number of accidents cannot be negative. Please try again." << endl;
+
+		if (cin.fail()) {
+			// Input was not an integer
+			cin.clear();				// Clear the error flag
+			cin.ignore(10000, '\n');	// Discard invalid input
+			cout << "Invalid input. Please enter a numeric value.\n";
 		}
-	} while (accidents < 0);
-	return accidents;
+		else if (accidents < 0) {
+			cout << "Invalid input. Number of accidents cannot be negative.\n";
+		}
+		else {
+			cin.ignore(10000, '\n');	// Clear any extra characters
+			return accidents;			// Valid Input
+		}
+	}
 }
 
 // Funtion to find and display the region with the fewest accidents
