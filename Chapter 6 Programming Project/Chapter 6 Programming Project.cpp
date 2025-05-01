@@ -1,74 +1,24 @@
 #include <iostream>
-#include <string>
+#include <iomanip> // For setprecision and swtw
 using namespace std;
 
-// Function Prototypes
-int getAccidents(const string& region);
-void findLowest(int north, int south, int east, int west, int central);
+// Function Prototype
+double fahrenheitToCelcius(int fahrenheit);
 
 int main() {
-	int north, south, east, west, central;
+	cout << fixed << setprecision(2); // Format output to 2 decimal places
+	cout << "Fahrenheit to Celcius Conversion Table (0 - 20)\n";
+	cout << "-----------------------------------------------\n";
+	cout << setw(12) << "Fahrenheit" << setw(12) << "Celcius\n";
 
-	cout << "Enter the number of automobile accidents in the following regions:\n";
-
-	north = getAccidents("North");
-	south = getAccidents("South");
-	east = getAccidents("East");
-	west = getAccidents("West");
-	central = getAccidents("Central");
-
-	findLowest(north, south, east, west, central);
-
+	for (int f = 0; f <= 20; f++) {
+		double c = fahrenheitToCelcius(f);
+		cout << setw(12) << f << setw(12) << c << endl;
+	}
 	return 0;
 }
 
-// Function to get and validate accident numbers
-int getAccidents(const string& region) {
-	int accidents;
-	while (true) {
-		cout << region << " region: ";
-		cin >> accidents;
-
-		if (cin.fail()) {
-			// Input was not an integer
-			cin.clear();				// Clear the error flag
-			cin.ignore(10000, '\n');	// Discard invalid input
-			cout << "Invalid input. Please enter a numeric value.\n";
-		}
-		else if (accidents < 0) {
-			cout << "Invalid input. Number of accidents cannot be negative.\n";
-		}
-		else {
-			cin.ignore(10000, '\n');	// Clear any extra characters
-			return accidents;			// Valid Input
-		}
-	}
-}
-
-// Funtion to find and display the region with the fewest accidents
-void findLowest(int north, int south, int east, int west, int central) {
-	int lowest = north;
-	string region = "North";
-
-	if (south < lowest) {
-		lowest = south;
-		region = "South";
-	}
-
-	if (east < lowest) {
-		lowest = east;
-		region = "East";
-	}
-
-	if (west < lowest) {
-		lowest = west;
-		region = "West";
-	}
-
-	if (central < lowest) {
-		lowest = central;
-		region = "Central";
-	}
-
-	cout << "\nThe region with the fewest accidents last year is: " << region << " with " << lowest << " accidents.\n";
+// Function to convert Fahrenheit to Celcius
+double fahrenheitToCelcius(int fahrenheit) {
+	return (5.0 / 9.0) * (fahrenheit - 32);
 }
