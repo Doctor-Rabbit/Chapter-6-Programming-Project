@@ -1,71 +1,64 @@
 #include <iostream>
+#include <string>
 using namespace std;
 
 // Function Prototypes
-double getLength();
-double getWidth();
-double calculateArea(double length, double width);
-double calculatePerimeter(double length, double width);
-bool askToContinue();
+int getAccidents(const string& region);
+void findLowest(int north, int south, int east, int west, int central);
 
 int main() {
-	double length, width, area, perimeter;
+	int north, south, east, west, central;
 
-		do {
-			length = getLength();
-			width = getWidth();
+	cout << "Enter the number of automobile accidents in the following regions:\n";
 
-			area = calculateArea(length, width);
-			perimeter = calculatePerimeter(length, width);
+	north = getAccidents("North");
+	south = getAccidents("South");
+	east = getAccidents("East");
+	west = getAccidents("West");
+	central = getAccidents("Central");
 
-			cout << "Area: " << area << endl;
-			cout << "Perimeter: " << perimeter << endl;
-		} while (askToContinue());
+	findLowest(north, south, east, west, central);
 
-	cout << "Goodbye!" << endl;
 	return 0;
 }
 
-// Function to get and validate the rectangle's length
-double getLength() {
-	double length;
+// Function to get and validate accident numbers
+int getAccidents(const string& region) {
+	int accidents;
 	do {
-		cout << "Enter the length of the rectangle: ";
-		cin >> length;
-		if (length <= 0) {
-			cout << "Length must be greater than 0. Please try again." << endl;
+		cout << region << " region: ";
+		cin >> accidents;
+		if (accidents < 0) {
+			cout << "Number of accidents cannot be negative. Please try again." << endl;
 		}
-	} while (length <= 0);
-	return length;
+	} while (accidents < 0);
+	return accidents;
 }
 
-// Funtion to get and validate the rectangle's width
-double getWidth() {
-	double width;
-	do {
-		cout << "Enter the width of the rectangle: ";
-		cin >> width;
-		if (width <= 0) {
-			cout << "Width must be greater than 0. Please try again." << endl;
-		}
-	} while (width <= 0);
-	return width;
-}
+// Funtion to find and display the region with the fewest accidents
+void findLowest(int north, int south, int east, int west, int central) {
+	int lowest = north;
+	string region = "North";
 
-// Function to calculate area
-double calculateArea(double length, double width) {
-	return length * width;
-}
+	if (south < lowest) {
+		lowest = south;
+		region = "South";
+	}
 
-// Function to calculate perimeter
-double calculatePerimeter(double length, double width) {
-	return 2 * (length + width);
-}
+	if (east < lowest) {
+		lowest = east;
+		region = "East";
+	}
 
-// Function to ask if the user wnats to continue
-bool askToContinue() {
-	char choice;
-	cout << "Would you like to process another rectangle? (Y/N): ";
-	cin >> choice;
-	return (choice == 'Y' || choice == 'y');
+	if (west < lowest) {
+		lowest = west;
+		region = "West";
+	}
+
+	if (central < lowest) {
+		lowest = central;
+		region = "Central";
+	}
+
+	cout << "\nThe region with the fewest accidents last year is: " << region << " with " << lowest << " accidents.\n";
 }
