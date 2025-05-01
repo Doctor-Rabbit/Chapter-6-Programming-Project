@@ -29,27 +29,45 @@ int main() {
 // Function to get and validate the rectangle's length
 double getLength() {
 	double length;
-	do {
+	while (true) {
 		cout << "Enter the length of the rectangle: ";
 		cin >> length;
-		if (length <= 0) {
-			cout << "Length must be greater than 0. Please try again." << endl;
+
+		if (cin.fail()) {
+			cin.clear();				// Clear Fail state
+			cin.ignore(10000, '\n');	// Discard invalid input
+			cout << "Invalid input. Please enter a numeric value.\n";
 		}
-	} while (length <= 0);
-	return length;
+		else if (length <= 0) {
+			cout << "Length must be greater than 0. Please try again.\n";
+		}
+		else {
+			cin.ignore(10000, '\n');	// Discard extra input
+			return length;
+		}
+	}
 }
 
 // Funtion to get and validate the rectangle's width
 double getWidth() {
 	double width;
-	do {
+	while (true) {
 		cout << "Enter the width of the rectangle: ";
 		cin >> width;
-		if (width <= 0) {
-			cout << "Width must be greater than 0. Please try again." << endl;
+
+		if (cin.fail()) {
+			cin.clear();
+			cin.ignore(10000, '\n');
+			cout << "Invalid input. Please enter a numeric value.\n";
 		}
-	} while (width <= 0);
-	return width;
+		else if (width <= 0) {
+			cout << "Width must be greater than 0. Please try again.\n";
+		}
+		else {
+			cin.ignore(10000, '\n');
+			return width;
+		}
+	}
 }
 
 // Function to calculate area
@@ -64,8 +82,17 @@ double calculatePerimeter(double length, double width) {
 
 // Function to ask if the user wnats to continue
 bool askToContinue() {
-	char choice;
-	cout << "Would you like to process another rectangle? (Y/N): ";
-	cin >> choice;
-	return (choice == 'Y' || choice == 'y');
+	char response;
+	while (true) {
+		cout << "Would you like to process another rectangle? (Y/N): ";
+		cin >> response;
+		cin.ignore(10000, '\n');
+
+		if (response == 'Y' || response == 'y')
+			return true;
+		else if (response == 'N' || response == 'n')
+			return false;
+		else
+			cout << "Invlaid input. Please enter Y or N.\n";
+	}
 }
