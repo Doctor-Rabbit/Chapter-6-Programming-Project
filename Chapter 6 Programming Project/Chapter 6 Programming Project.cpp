@@ -1,79 +1,107 @@
 #include <iostream>
-#include <iomanip> // Requiered for setprecision
+#include <iomanip> 
 using namespace std;
 
+// Constants
+const double laborCostPerHour = 25.00;
+const double paintCoverage = 110.0; // 1 gallon of paint covers110 square feet
+
 // Function Prototypes
-void getJudgeScore(double& score);
-double findLowest(const double scores[], int size);
-double findHighest(const double scores[], int size);
-double calcAverage(const double scores[], int size);
+int getNumberOfRooms();
+double getPricePerGallon();
+double getSquareFootage(int roomNumber);
+double calculateGallons(double squareFeet);
+double calculateLaborHours(double squareFeet);
+void displayResults(double totalGallons, double totalHours, double totalPaintCost, double totalLaborCost, double totalCost);
 
 int main() {
-	const int NUM_JUDGES = 5;
-	double scores[NUM_JUDGES];
+	int numberOfRooms = getNumberOfRooms();
+	double pricePerGallon = getPricePerGallon();
 
-	// Get scores from judges
-	for (int i = 0; i < NUM_JUDGES; ++i) {
-		cout << "Enter score for Judge " << (i + 1) << "; ";
-		getJudgeScore(scores[i]);
+	double totalSquareFeet = 0.0;
+	double totalGallons = 0.0;
+	double totalLaborHours = 0.0;
+	for (int i = 1; i <= numberOfRooms; ++i) {
+		double squareFeet = getSquareFootage(i);
+		totalSquareFeet += squareFeet;
+		totalGallons += calculateGallons(squareFeet);
+		totalLaborHours += calculateLaborHours(squareFeet);
 	}
 
-	// Calculateand display the final average score
-	double finalScore = calcAverage(scores, NUM_JUDGES);
+	double totalPaintCost = totalGallons * pricePerGallon;
+	double totalLaborCost = totalLaborHours * laborCostPerHour;
+	double totalCost = totalPaintCost + totalLaborCost;
 
-	cout << fixed << setprecision(2);
-	cout << "Final score (after dropping highest and lowest): " << finalScore << endl;
+	displayResults(totalGallons, totalLaborHours, totalPaintCost, totalLaborCost, totalCost);
 
 	return 0;
 }
 
-// Function to get and validate a score from a judge
-void getJudgeScore(double& score) {
+// Function to get the number of rooms
+int getNumberOfRooms() {
+	int rooms;
 	while (true) {
-		cin >> score;
-		if (cin.fail() || score < 0.0 || score > 10.0) {
-			cin.clear();
-			cin.ignore(10000, '\n');
-			cout << "Invalid input. Enter a score between 0 and 10: ";
+		cout << "Enter the number of rooms to be painted: ";
+		cin >> rooms;
+		if (rooms < 1) {
+			cout << "Invalid input. Number of rooms must be at least 1.\n";
 		}
 		else {
 			break;
 		}
 	}
+	return rooms;
 }
 
-// Function to find the lowest score
-double findLowest(const double scores[], int size) {
-	double lowest = scores[0];
-	for (int i = 1; i < size; ++i) {
-		if (scores[i] < lowest) {
-			lowest = scores[i];
+// Function to get the price per gallon of paint
+double getPricePerGallon() {
+	double price;
+	while (true) {
+		cout << "Enter the price of paint per gallon: $";
+		cin >> price;
+		if (price < 10.00) {
+			cout << "Invalid Input. Price per gallon must be at least $10.00.\n";
+		}
+		else {
+			break;
 		}
 	}
-	return lowest;
+	return price;
 }
 
-// Function to find the highest score
-double findHighest(const double scores[], int size) {
-	double highest = scores[0];
-	for (int i = 1; i < size; ++i) {
-		if (scores[i] > highest) {
-			highest = scores[i];
+// Function to get the square footage of the room
+double getSquareFootage(int roomNumber) {
+	double squareFeet;
+	while (true) {
+		cout << "Enter the square footage for room " << roomNumber << ": ";
+		cin >> squareFeet;
+		if (squareFeet < 0) {
+			cout << "Invalid input. Square footage cannot be negative.\n";
+		}
+		else {
+			break;
 		}
 	}
-	return highest;
+	return squareFeet;
 }
 
-// Function to calculate average after dropping highest and lowest
-double calcAverage(const double scores[], int size) {
-	double total = 0.0;
-	double highest = findHighest(scores, size);
-	double lowest = findLowest(scores, size);
+// Function to calculate gallons of paint needed for a given square footage
+double calculateGallons(double squareFeet) {
+	return squareFeet / paintCoverage;
+}
 
-	for (int i = 0; i < size; ++i) {
-		total += scores[i];
-	}
+// Function to calculate labor hours needed for a given square footage
+double calculateLaborHours(double squareFeet) {
+	return (squareFeet / paintCoverage) * 8; // 8hours per gallon of paint
+}
 
-	total -= (highest + lowest); // Drop the highest and lowest
-	return total / (size - 2);	 // Average the remaining 3
+// Function to display the results of the calculations
+void displayResults(double totalGallons, double totalHours, double totalPaintCost, double totalLaborCost, double totalCost) {
+	cout << fixed << setprecision(2);
+	cout << "\n--- Painting Job Summary ---\n";
+	cout << "Total gallons of paint requiered: " << totalGallons << " gallons\n";
+	cout << "Total hours of labor requiered: " << totalHours << " hours\n";
+	cout << "Total cost of paint: $" << totalPaintCost << endl;
+	cout << "Total labor charges: $" << totalLaborCost << endl;
+	cout << "Total cost of the paint job: $" << totalCost << endl;
 }
